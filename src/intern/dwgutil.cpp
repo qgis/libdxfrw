@@ -272,7 +272,7 @@ void dwgCompressor::decompress21(duint8 *cbuf, duint8 *dbuf, duint32 csize, duin
         copyCompBytes21(cbuf, dbuf, length, srcIndex, dstIndex);
         srcIndex += length;
         dstIndex += length;
-        if (dstIndex >=dsize) break; //check if last chunk are compresed & terminate
+        if (dstIndex >=dsize) break; //check if last chunk are compressed & terminate
 
         length = 0;
         opCode = cbuf[srcIndex++];
