@@ -140,9 +140,7 @@ duint32 dwgCompressor::litLength18(){
 
 void dwgCompressor::decompress18(duint8 *cbuf, duint8 *dbuf, duint32 csize, duint32 dsize){
     bufC = cbuf;
-    bufD = dbuf;
     sizeC = csize -2;
-    sizeD = dsize;
     DRW_DBG("dwgCompressor::decompress, last 2 bytes: ");
     DRW_DBGH(bufC[sizeC]);DRW_DBGH(bufC[sizeC+1]);DRW_DBG("\n");
     sizeC = csize;
@@ -152,11 +150,11 @@ void dwgCompressor::decompress18(duint8 *cbuf, duint8 *dbuf, duint32 csize, duin
     duint32 litCount;
 
     pos=0; //current position in compressed buffer
-    rpos=0; //current position in resulting decompressed buffer
+    duint32 rpos=0; //current position in resulting decompresed buffer
     litCount = litLength18();
     //copy first literal length
     for (duint32 i=0; i < litCount; ++i) {
-        bufD[rpos++] = bufC[pos++];
+        dbuf[rpos++] = bufC[pos++];
     }
 
     while (pos < csize && (rpos < dsize+1)){//rpos < dsize to prevent crash more robust are needed
@@ -200,18 +198,18 @@ void dwgCompressor::decompress18(duint8 *cbuf, duint8 *dbuf, duint32 csize, duin
             return; //fails, not valid
         }
         //copy "compressed data", TODO Needed verify out of bounds
-        duint32 remaining = sizeD - (litCount+rpos);
+        duint32 remaining = dsize - (litCount+rpos);
         if (remaining < compBytes){
             compBytes = remaining;
             DRW_DBG("WARNING dwgCompressor::decompress, bad compBytes size, Cpos: ");
             DRW_DBG(pos);DRW_DBG(", Dpos: ");DRW_DBG(rpos);DRW_DBG("\n");
         }
         for (duint32 i=0, j= rpos - compOffset -1; i < compBytes; i++) {
-            bufD[rpos++] = bufD[j++];
+            dbuf[rpos++] = dbuf[j++];
         }
         //copy "uncompressed data", TODO Needed verify out of bounds
         for (duint32 i=0; i < litCount; i++) {
-            bufD[rpos++] = bufC[pos++];
+            dbuf[rpos++] = bufC[pos++];
         }
     }
     DRW_DBG("WARNING dwgCompressor::decompress, bad out, Cpos: ");DRW_DBG(pos);DRW_DBG(", Dpos: ");DRW_DBG(rpos);DRW_DBG("\n");
