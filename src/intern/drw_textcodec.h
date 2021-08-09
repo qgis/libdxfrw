@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include "../drw_base.h"
 
 class DRW_Converter;
 
@@ -15,7 +16,7 @@ public:
     std::string toUtf8(const std::string &s);
     int getVersion(){return version;}
     void setVersion(const std::string &versionStr, bool dxfFormat);
-    void setVersion(int v, bool dxfFormat);
+    void setVersion(DRW::Version v, bool dxfFormat);
     void setCodePage(const std::string &c, bool dxfFormat);
     std::string getCodePage(){return cp;}
 
@@ -23,7 +24,7 @@ private:
     std::string correctCodePage(const std::string& s);
 
 private:
-    int version;
+    DRW::Version version{DRW::UNKNOWNV};
     std::string cp;
     std::unique_ptr< DRW_Converter> conv;
 };
