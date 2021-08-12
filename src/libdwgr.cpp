@@ -231,7 +231,7 @@ bool dwgR::openFile(std::ifstream *filestr){
 
     // check version line against known version strings
     version = DRW::UNKNOWNV;
-    for ( auto it = DRW::dwgVersionStrings.begin(); it != DRW::dwgVersionStrings.end(); ++it )
+    for ( auto it = DRW_Versions::dwgVersionStrings.begin(); it != DRW_Versions::dwgVersionStrings.end(); ++it )
     {
         if ( strcmp( line, it->first ) == 0 ) {
             version = it->second;
