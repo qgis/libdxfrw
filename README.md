@@ -6,11 +6,11 @@ libdxfrw is a free C++ library to read and write DXF files in both formats, asci
 any later version).
 
 
-If you are looking for general information about the project, check our website:
-http://sourceforge.net/projects/libdxfrw
+A fork of http://sourceforge.net/projects/libdxfrw
 
 
-WARNING: This project is a fork to add a CMakeLists.txt for some of our downstream project's in LibreCAD to make compiling and following this project easier.
+This project is an attempt to refactor out QGIS specific code paths from libdxfrw, so that fixes from the QGIS internal copy can be upstreamed to https://github.com/LibreCAD/libdxfrw (or alternative)
+
 ==========
 
 Building and installing the library
