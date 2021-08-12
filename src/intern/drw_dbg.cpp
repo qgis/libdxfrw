@@ -61,11 +61,12 @@ DRW_dbg::DRW_dbg(){
 void DRW_dbg::setLevel(Level lvl){
     level = lvl;
     switch (level){
-    case DEBUG:
+    case Level::Debug:
         prClass.reset(new print_debug);
         break;
-    default:
+    case Level::None:
         prClass.reset(new print_none);
+        break;
     }
 }
 
