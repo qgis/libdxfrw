@@ -124,7 +124,7 @@ public:
     virtual void printHL(int c, int s, int h){(void)c;(void)s;(void)h;}
     virtual void printPT(double x, double y, double z){(void)x;(void)y;(void)z;}
     DebugPrinter()=default;
-    virtual ~DebugPrinter()=default;
+    virtual ~DebugPrinter();
 };
 
 /**
