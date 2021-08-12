@@ -17,3 +17,5 @@ void DRW::setCustomDebugPrinter(DebugPrinter *printer)
 {
   DRW_dbg::getInstance()->setCustomDebugPrinter(std::unique_ptr<DebugPrinter>(printer));
 }
+
+DRW::DebugPrinter::~DebugPrinter() = default;
