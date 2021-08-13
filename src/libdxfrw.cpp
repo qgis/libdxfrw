@@ -2451,7 +2451,7 @@ bool dxfRW::processXline() {
 }
 
 bool dxfRW::processCircle() {
-    DRW_DBG("dxfRW::processPoint\n");
+    DRW_DBG("dxfRW::processCircle\n");
     int code;
     DRW_Circle circle;
     while (reader->readRec(&code)) {
