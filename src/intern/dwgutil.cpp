@@ -655,7 +655,7 @@ secEnum::DWGSection secEnum::getEnum(const std::string &nameSec){
     } else if (nameSec=="AcDb:Classes"){
         return CLASSES;
     } else if (nameSec=="AcDb:SummaryInfo"){
-        return SUMARYINFO;
+        return SUMMARYINFO;
     } else if (nameSec=="AcDb:Preview"){
         return PREVIEW;
     } else if (nameSec=="AcDb:VBAProject"){

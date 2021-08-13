@@ -58,7 +58,7 @@ public:
         FILEHEADER,    /*!< File Header (in R3-R15*/
         HEADER,        /*!< AcDb:Header */
         CLASSES,       /*!< AcDb:Classes */
-        SUMARYINFO,    /*!< AcDb:SummaryInfo */
+        SUMMARYINFO,    /*!< AcDb:SummaryInfo */
         PREVIEW,       /*!< AcDb:Preview */
         VBAPROY,       /*!< AcDb:VBAProject */
         APPINFO,       /*!< AcDb:AppInfo */
