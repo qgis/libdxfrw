@@ -49,3 +49,8 @@ jobs:
             https://scan.coverity.com/builds?project=qgis%2Flibdxfrw
         env:
           TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+      - name: Archive scan-build results
+        uses: actions/upload-artifact@v2
+        with:
+          name: libdxfrw.tgz
+          path: libdxfrw.tgz
