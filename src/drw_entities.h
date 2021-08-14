@@ -118,7 +118,7 @@ protected:
     //parses dxf pair to read entity
     bool parseCode(int code, dxfReader *reader);
     //calculates extrusion axis (normal vector)
-    void calculateAxis(DRW_Coord extPoint);
+    void calculateAxis(const DRW_Coord &extPoint);
     //apply extrusion to @extPoint and return data in @point
     void extrudePoint(const DRW_Coord &extPoint, DRW_Coord *point);
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0)=0;

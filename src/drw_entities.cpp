@@ -21,9 +21,9 @@
 *   Calculate arbitrary axis for apply extrusions
 *  @author Rallaz
 */
-void DRW_Entity::calculateAxis(DRW_Coord extPoint){
+void DRW_Entity::calculateAxis(const DRW_Coord &extPoint){
     //Follow the arbitrary DXF definitions for extrusion axes.
-    if (fabs(extPoint.x) < 0.015625 && fabs(extPoint.y) < 0.015625) {
+    if ( std::fabs( extPoint.x ) < 0.015625 && std::fabs( extPoint.y ) < 0.015625 ) {
         //If we get here, implement Ax = Wy x N where Wy is [0,1,0] per the DXF spec.
         //The cross product works out to Wy.y*N.z-Wy.z*N.y, Wy.z*N.x-Wy.x*N.z, Wy.x*N.y-Wy.y*N.x
         //Factoring in the fixed values for Wy gives N.z,0,-N.x
@@ -643,7 +643,7 @@ void DRW_Arc::applyExtrusion(){
         // Note that the following code only handles the special case where there is a 2D
         // drawing with the z axis heading into the paper (or rather screen). An arbitrary
         // extrusion axis (with x and y values greater than 1/64) may still have issues.
-        if (fabs(extPoint.x) < 0.015625 && fabs(extPoint.y) < 0.015625 && extPoint.z < 0.0) {
+        if ( std::fabs( extPoint.x ) < 0.015625 && std::fabs( extPoint.y ) < 0.015625 && extPoint.z < 0.0 ) {
             staangle=M_PI-staangle;
             endangle=M_PI-endangle;
 
