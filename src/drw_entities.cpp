@@ -54,7 +54,7 @@ void DRW_Entity::calculateAxis(DRW_Coord extPoint){
 *   apply extrusion in a point using arbitrary axis (previous calculated)
 *  @author Rallaz
 */
-void DRW_Entity::extrudePoint(DRW_Coord extPoint, DRW_Coord *point){
+void DRW_Entity::extrudePoint(const DRW_Coord &extPoint, DRW_Coord *point){
     double px, py, pz;
     px = (extAxisX.x*point->x)+(extAxisY.x*point->y)+(extPoint.x*point->z);
     py = (extAxisX.y*point->x)+(extAxisY.y*point->y)+(extPoint.y*point->z);
@@ -156,7 +156,7 @@ bool DRW_Entity::parseDxfGroups(int code, dxfReader *reader){
     int nc;
     std::string appName= reader->getString();
     if (!appName.empty() && appName.at(0)== '{'){
-        curr.addString(code, appName.substr(1, (int) appName.size()-1));
+        curr.addString( code, appName.substr( 1, static_cast< int >( appName.size() ) - 1 ) );
         ls.push_back(curr);
         while (code !=102 && appName.at(0)== '}'){
             reader->readRec(&nc);//RLZ curr.code = code or nc?
@@ -207,7 +207,7 @@ bool DRW_Entity::parseDwg(DRW::Version version, dwgBuffer *buf, dwgBuffer* strBu
         DRW_DBG(" Object size: "); DRW_DBG(objSize); DRW_DBG("\n");
     }
 
-    if (strBuf != NULL && version > DRW::AC1018) {//2007+
+    if (strBuf && version > DRW::AC1018) {//2007+
         strBuf->moveBitPos(objSize-1);
         DRW_DBG(" strBuf strbit pos 2007: "); DRW_DBG(strBuf->getPosition()); DRW_DBG(" strBuf bpos 2007: "); DRW_DBG(strBuf->getBitPos()); DRW_DBG("\n");
         if (strBuf->getBit() == 1){
@@ -287,7 +287,7 @@ bool DRW_Entity::parseDwg(DRW::Version version, dwgBuffer *buf, dwgBuffer* strBu
 //        entmode = 2;
     else if(entmode ==2)
         entmode = 0;
-    space = (DRW::Space)entmode; //RLZ verify cast values
+    space = static_cast< DRW::Space >( entmode ); //RLZ verify cast values
     DRW_DBG("entmode: "); DRW_DBG(entmode);
     numReactors = buf->getBitShort(); //BS
     DRW_DBG(", numReactors: "); DRW_DBG(numReactors);
@@ -733,7 +733,7 @@ void DRW_Ellipse::correctAxis(){
         complete = true;
     }
     if (ratio > 1){
-        if ( fabs(endparam - staparam - M_PIx2) < 1.0e-10)
+        if ( std::fabs(endparam - staparam - M_PIx2) < 1.0e-10)
             complete = true;
         double incX = secPoint.x;
         secPoint.x = -(secPoint.y * ratio);
@@ -1303,10 +1303,10 @@ void DRW_Text::parseCode(int code, dxfReader *reader){
         textgen = reader->getInt32();
         break;
     case 72:
-        alignH = (HAlign)reader->getInt32();
+        alignH = static_cast< HAlign >( reader->getInt32() );
         break;
     case 73:
-        alignV = (VAlign)reader->getInt32();
+        alignV = static_cast< VAlign >( reader->getInt32() );
         break;
     case 1:
         text = reader->getUtf8String();
@@ -1390,11 +1390,11 @@ bool DRW_Text::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
         DRW_DBG("textgen: "); DRW_DBG(textgen);
     }
     if ( !(data_flags & 0x40) ) { /* Horiz align. BS 72 present if !(DataFlags & 0x40) */
-        alignH = (HAlign)buf->getBitShort();
+        alignH = static_cast< HAlign >( buf->getBitShort() );
         DRW_DBG(", alignH: "); DRW_DBG(alignH);
     }
     if ( !(data_flags & 0x80) ) { /* Vert align. BS 73 present if !(DataFlags & 0x80) */
-        alignV = (VAlign)buf->getBitShort();
+        alignV = static_cast< VAlign >( buf->getBitShort() );
         DRW_DBG(", alignV: "); DRW_DBG(alignV);
     }
     DRW_DBG("\n");
@@ -1515,7 +1515,7 @@ bool DRW_MText::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
 
 void DRW_MText::updateAngle() {
     if (hasXAxisVec) {
-        angle = atan2(secPoint.y, secPoint.x) * ARAD;
+       angle = std::atan2( secPoint.y, secPoint.x ) * ARAD;
     }
 }
 
@@ -1683,7 +1683,7 @@ bool DRW_Vertex::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs, doub
         DRW_DBG("basePoint: "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z);
         stawidth = buf->getBitDouble();
         if (stawidth < 0)
-			endwidth = stawidth = fabs(stawidth);
+            endwidth = stawidth = std::  fabs(stawidth);
         else
             endwidth = buf->getBitDouble();
         bulge = buf->getBitDouble();

@@ -120,7 +120,7 @@ protected:
     //calculates extrusion axis (normal vector)
     void calculateAxis(DRW_Coord extPoint);
     //apply extrusion to @extPoint and return data in @point
-    void extrudePoint(DRW_Coord extPoint, DRW_Coord *point);
+    void extrudePoint(const DRW_Coord &extPoint, DRW_Coord *point);
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0)=0;
     //parses dwg common start part to read entity
     bool parseDwg(DRW::Version version, dwgBuffer *buf, dwgBuffer* strBuf, duint32 bs=0);
