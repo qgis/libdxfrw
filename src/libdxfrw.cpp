@@ -660,7 +660,7 @@ bool dxfRW::writeCircle(DRW_Circle *ent) {
     if (ent->basePoint.z != 0.0) {
         writer->writeDouble(30, ent->basePoint.z);
     }
-    writer->writeDouble(40, ent->radious);
+    writer->writeDouble(40, ent->radius);
     return true;
 }
 
@@ -675,7 +675,7 @@ bool dxfRW::writeArc(DRW_Arc *ent) {
     if (ent->basePoint.z != 0.0) {
         writer->writeDouble(30, ent->basePoint.z);
     }
-    writer->writeDouble(40, ent->radious);
+    writer->writeDouble(40, ent->radius);
     if (version > DRW::AC1009) {
         writer->writeString(100, "AcDbArc");
     }
@@ -726,9 +726,9 @@ bool dxfRW::writeTrace(DRW_Trace *ent){
     writer->writeDouble(12, ent->thirdPoint.x);
     writer->writeDouble(22, ent->thirdPoint.y);
     writer->writeDouble(32, ent->thirdPoint.z);
-    writer->writeDouble(13, ent->fourPoint.x);
-    writer->writeDouble(23, ent->fourPoint.y);
-    writer->writeDouble(33, ent->fourPoint.z);
+    writer->writeDouble(13, ent->forthPoint.x);
+    writer->writeDouble(23, ent->forthPoint.y);
+    writer->writeDouble(33, ent->forthPoint.z);
     return true;
 }
 
@@ -747,9 +747,9 @@ bool dxfRW::writeSolid(DRW_Solid *ent){
     writer->writeDouble(12, ent->thirdPoint.x);
     writer->writeDouble(22, ent->thirdPoint.y);
     writer->writeDouble(32, ent->thirdPoint.z);
-    writer->writeDouble(13, ent->fourPoint.x);
-    writer->writeDouble(23, ent->fourPoint.y);
-    writer->writeDouble(33, ent->fourPoint.z);
+    writer->writeDouble(13, ent->forthPoint.x);
+    writer->writeDouble(23, ent->forthPoint.y);
+    writer->writeDouble(33, ent->forthPoint.z);
     return true;
 }
 
@@ -768,9 +768,9 @@ bool dxfRW::write3dface(DRW_3Dface *ent){
     writer->writeDouble(12, ent->thirdPoint.x);
     writer->writeDouble(22, ent->thirdPoint.y);
     writer->writeDouble(32, ent->thirdPoint.z);
-    writer->writeDouble(13, ent->fourPoint.x);
-    writer->writeDouble(23, ent->fourPoint.y);
-    writer->writeDouble(33, ent->fourPoint.z);
+    writer->writeDouble(13, ent->forthPoint.x);
+    writer->writeDouble(23, ent->forthPoint.y);
+    writer->writeDouble(33, ent->forthPoint.z);
     writer->writeInt16(70, ent->invisibleflag);
     return true;
 }
@@ -978,7 +978,7 @@ bool dxfRW::writeHatch(DRW_Hatch *ent){
                         DRW_Arc* a = (DRW_Arc*)loop->objlist.at(j).get();
                         writer->writeDouble(10, a->basePoint.x);
                         writer->writeDouble(20, a->basePoint.y);
-                        writer->writeDouble(40, a->radious);
+                        writer->writeDouble(40, a->radius);
                         writer->writeDouble(50, a->staangle*ARAD);
                         writer->writeDouble(51, a->endangle*ARAD);
                         writer->writeInt16(73, a->isccw);
