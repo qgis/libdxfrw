@@ -362,7 +362,7 @@ public:
     DRW_Trace() {
         eType = DRW::TRACE;
         thirdPoint.z = 0;
-        fourPoint.z = 0;
+        forthPoint.z = 0;
     }
 
     virtual void applyExtrusion();
@@ -373,7 +373,7 @@ protected:
 
 public:
     DRW_Coord thirdPoint;        /*!< third point, code 12, 22 & 32 */
-    DRW_Coord fourPoint;        /*!< four point, code 13, 23 & 33 */
+    DRW_Coord forthPoint;        /*!< forth point, code 13, 23 & 33 */
 };
 
 //! Class to handle solid entity
@@ -443,7 +443,7 @@ public:
     //! third corner in WCS
     const DRW_Coord & thirdCorner() { return thirdPoint; }
     //! fourth corner in WCS
-    const DRW_Coord & fourthCorner() { return fourPoint; }
+    const DRW_Coord & fourthCorner() { return forthPoint; }
     //! edge visibility flags
     InvisibleEdgeFlags edgeFlags() { return (InvisibleEdgeFlags)invisibleflag; }
 
@@ -775,7 +775,7 @@ public:
 	std::vector<std::shared_ptr<DRW_Vertex>> vertlist;  /*!< vertex list */
 
 private:
-    std::list<duint32>hadlesList; //list of handles, only in 2004+
+    std::list<duint32>handlesList; //list of handles, only in 2004+
     duint32 firstEH;      //handle of first entity, only in pre-2004
     duint32 lastEH;       //handle of last entity, only in pre-2004
     dwgHandle seqEndH;    //handle of SEQEND entity

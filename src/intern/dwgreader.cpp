@@ -892,7 +892,7 @@ bool dwgReader::readPlineVertex(DRW_Polyline& pline, dwgBuffer *dbuf){
                 nextH = nextEntLink;
         }
     } else {//2004+
-        for (std::list<duint32>::iterator it = pline.hadlesList.begin() ; it != pline.hadlesList.end(); ++it){
+        for (std::list<duint32>::iterator it = pline.handlesList.begin() ; it != pline.handlesList.end(); ++it){
             duint32 nextH = *it;
             mit = ObjectMap.find(nextH);
             if (mit==ObjectMap.end()) {
