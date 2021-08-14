@@ -601,7 +601,7 @@ void DRW_Circle::applyExtrusion(){
 void DRW_Circle::parseCode(int code, dxfReader *reader){
     switch (code) {
     case 40:
-        radious = reader->getDouble();
+        radius = reader->getDouble();
         break;
     default:
         DRW_Point::parseCode(code, reader);
@@ -619,8 +619,8 @@ bool DRW_Circle::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     basePoint.y = buf->getBitDouble();
     basePoint.z = buf->getBitDouble();
     DRW_DBG("center: "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z);
-    radious = buf->getBitDouble();
-    DRW_DBG("\nradius: "); DRW_DBG(radious);
+    radius = buf->getBitDouble();
+    DRW_DBG("\nradius: "); DRW_DBG(radius);
 
     thickness = buf->getThickness(version > DRW::AC1014);
     DRW_DBG(" thickness: "); DRW_DBG(thickness);
@@ -679,8 +679,8 @@ bool DRW_Arc::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     basePoint.z = buf->getBitDouble();
     DRW_DBG("center point: "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z);
 
-    radious = buf->getBitDouble();
-    DRW_DBG("\nradius: "); DRW_DBG(radious);
+    radius = buf->getBitDouble();
+    DRW_DBG("\nradius: "); DRW_DBG(radius);
     thickness = buf->getThickness(version > DRW::AC1014);
     DRW_DBG(" thickness: "); DRW_DBG(thickness);
     extPoint = buf->getExtrusion(version > DRW::AC1014);
@@ -817,7 +817,7 @@ void DRW_Trace::applyExtrusion(){
         extrudePoint(extPoint, &basePoint);
         extrudePoint(extPoint, &secPoint);
         extrudePoint(extPoint, &thirdPoint);
-        extrudePoint(extPoint, &fourPoint);
+        extrudePoint(extPoint, &forthPoint);
     }
 }
 
@@ -833,13 +833,13 @@ void DRW_Trace::parseCode(int code, dxfReader *reader){
         thirdPoint.z = reader->getDouble();
         break;
     case 13:
-        fourPoint.x = reader->getDouble();
+        forthPoint.x = reader->getDouble();
         break;
     case 23:
-        fourPoint.y = reader->getDouble();
+        forthPoint.y = reader->getDouble();
         break;
     case 33:
-        fourPoint.z = reader->getDouble();
+        forthPoint.z = reader->getDouble();
         break;
     default:
         DRW_Line::parseCode(code, reader);
@@ -863,15 +863,15 @@ bool DRW_Trace::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     thirdPoint.x = buf->getRawDouble();
     thirdPoint.y = buf->getRawDouble();
     thirdPoint.z = basePoint.z;
-    fourPoint.x = buf->getRawDouble();
-    fourPoint.y = buf->getRawDouble();
-    fourPoint.z = basePoint.z;
+    forthPoint.x = buf->getRawDouble();
+    forthPoint.y = buf->getRawDouble();
+    forthPoint.z = basePoint.z;
     extPoint = buf->getExtrusion(version>DRW::AC1014);
 
     DRW_DBG(" - base "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z);
     DRW_DBG("\n - sec "); DRW_DBGPT(secPoint.x, secPoint.y, secPoint.z);
     DRW_DBG("\n - third "); DRW_DBGPT(thirdPoint.x, thirdPoint.y, thirdPoint.z);
-    DRW_DBG("\n - fourth "); DRW_DBGPT(fourPoint.x, fourPoint.y, fourPoint.z);
+    DRW_DBG("\n - fourth "); DRW_DBGPT(forthPoint.x, forthPoint.y, forthPoint.z);
     DRW_DBG("\n - extrusion: "); DRW_DBGPT(extPoint.x, extPoint.y, extPoint.z);
     DRW_DBG("\n - thickness: "); DRW_DBG(thickness); DRW_DBG("\n");
 
@@ -921,9 +921,9 @@ bool DRW_3Dface::parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs){
         thirdPoint.x = buf->getBitDouble();
         thirdPoint.y = buf->getBitDouble();
         thirdPoint.z = buf->getBitDouble();
-        fourPoint.x = buf->getBitDouble();
-        fourPoint.y = buf->getBitDouble();
-        fourPoint.z = buf->getBitDouble();
+        forthPoint.x = buf->getBitDouble();
+        forthPoint.y = buf->getBitDouble();
+        forthPoint.z = buf->getBitDouble();
         invisibleflag = buf->getBitShort();
     } else { // 2000+
         bool has_no_flag = buf->getBit();
@@ -937,9 +937,9 @@ bool DRW_3Dface::parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs){
         thirdPoint.x = buf->getDefaultDouble(secPoint.x);
         thirdPoint.y = buf->getDefaultDouble(secPoint.y);
         thirdPoint.z = buf->getDefaultDouble(secPoint.z);
-        fourPoint.x = buf->getDefaultDouble(thirdPoint.x);
-        fourPoint.y = buf->getDefaultDouble(thirdPoint.y);
-        fourPoint.z = buf->getDefaultDouble(thirdPoint.z);
+        forthPoint.x = buf->getDefaultDouble(thirdPoint.x);
+        forthPoint.y = buf->getDefaultDouble(thirdPoint.y);
+        forthPoint.z = buf->getDefaultDouble(thirdPoint.z);
         invisibleflag = has_no_flag ? (int)NoEdge : buf->getBitShort();
     }
     drw_assert(invisibleflag>=NoEdge);
@@ -948,7 +948,7 @@ bool DRW_3Dface::parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs){
     DRW_DBG(" - base "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z); DRW_DBG("\n");
     DRW_DBG(" - sec "); DRW_DBGPT(secPoint.x, secPoint.y, secPoint.z); DRW_DBG("\n");
     DRW_DBG(" - third "); DRW_DBGPT(thirdPoint.x, thirdPoint.y, thirdPoint.z); DRW_DBG("\n");
-    DRW_DBG(" - fourth "); DRW_DBGPT(fourPoint.x, fourPoint.y, fourPoint.z); DRW_DBG("\n");
+    DRW_DBG(" - fourth "); DRW_DBGPT(forthPoint.x, forthPoint.y, forthPoint.z); DRW_DBG("\n");
     DRW_DBG(" - Invisibility mask: "); DRW_DBG(invisibleflag); DRW_DBG("\n");
 
     /* Common Entity Handle Data */
@@ -1613,7 +1613,7 @@ bool DRW_Polyline::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     } else {
         for (dint32 i = 0; i < ooCount; ++i){
                 dwgHandle objectH = buf->getOffsetHandle(handle);
-                hadlesList.push_back (objectH.ref);
+                handlesList.push_back (objectH.ref);
                 DRW_DBG(" Vertex Handle: "); DRW_DBGHL(objectH.code, objectH.size, objectH.ref); DRW_DBG("\n");
                 DRW_DBG("Remaining bytes: "); DRW_DBG(buf->numRemainingBytes()); DRW_DBG("\n");
         }
@@ -1753,7 +1753,7 @@ void DRW_Hatch::parseCode(int code, dxfReader *reader){
         else if (ellipse) ellipse->secPoint.y = reader->getDouble();
         break;
     case 40:
-        if (arc) arc->radious = reader->getDouble();
+        if (arc) arc->radius = reader->getDouble();
         else if (ellipse) ellipse->ratio = reader->getDouble();
         break;
     case 41:
@@ -1884,7 +1884,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                 } else if (typePath == 2){ //circle arc
                     addArc();
                     arc->basePoint = buf->get2RawDouble();
-                    arc->radious = buf->getBitDouble();
+                    arc->radius = buf->getBitDouble();
                     arc->staangle = buf->getBitDouble();
                     arc->endangle = buf->getBitDouble();
                     arc->isccw = buf->getBit();
