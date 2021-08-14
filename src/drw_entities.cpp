@@ -716,10 +716,10 @@ void DRW_Ellipse::applyExtrusion(){
     if (haveExtrusion) {
         calculateAxis(extPoint);
         extrudePoint(extPoint, &secPoint);
-        double intialparam = staparam;
+        double initialparam = staparam;
         if (extPoint.z < 0.){
             staparam = M_PIx2 - endparam;
-            endparam = M_PIx2 - intialparam;
+            endparam = M_PIx2 - initialparam;
         }
     }
 }
@@ -1820,7 +1820,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     dwgBuffer sBuff = *buf;
     dwgBuffer *sBuf = buf;
     duint32 totalBoundItems = 0;
-    bool havePixelSize = false;
+    bool hasPixelSize = false;
 
     if (version > DRW::AC1018) {//2007+
         sBuf = &sBuff; //separate buffer for strings
@@ -1872,7 +1872,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     //read loops
     for (dint32 i = 0 ; i < loopsnum; ++i){
 		loop = std::make_shared<DRW_HatchLoop>(buf->getBitLong());
-        havePixelSize |= loop->type & 4;
+        hasPixelSize |= loop->type & 4;
         if (!(loop->type & 2)){ //Not polyline
             dint32 numPathSeg = buf->getBitLong();
             for (dint32 j = 0; j<numPathSeg;++j){
@@ -1973,7 +1973,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
         }//end deflines
     } //end not solid
 
-    if (havePixelSize){
+    if (hasPixelSize){
         ddouble64 pixsize = buf->getBitDouble();
         DRW_DBG("\npixel size: "); DRW_DBG(pixsize);
     }
