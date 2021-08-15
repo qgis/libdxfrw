@@ -91,7 +91,6 @@ namespace DRW {
 #define SETENTFRIENDS  friend class dxfRW; \
                        friend class dwgReader;
 
-//! Base class for entities
 /*!
 *  Base class for entities
 *  @author Rallaz
@@ -178,7 +177,6 @@ private:
 };
 
 
-//! Class to handle point entity
 /*!
 *  Class to handle point entity
 *  @author Rallaz
@@ -207,7 +205,6 @@ public:
     // the UCS in effect when the point was drawn
 };
 
-//! Class to handle line entity
 /*!
 *  Class to handle line entity
 *  @author Rallaz
@@ -228,7 +225,6 @@ public:
     DRW_Coord secPoint;        /*!< second point, code 11, 21 & 31 */
 };
 
-//! Class to handle ray entity
 /*!
 *  Class to handle ray entity
 *  @author Rallaz
@@ -243,7 +239,6 @@ protected:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 };
 
-//! Class to handle xline entity
 /*!
 *  Class to handle xline entity
 *  @author Rallaz
@@ -255,7 +250,6 @@ public:
     }
 };
 
-//! Class to handle circle entity
 /*!
 *  Class to handle circle entity
 *  @author Rallaz
@@ -277,7 +271,6 @@ public:
     double radius;                 /*!< radius, code 40 */
 };
 
-//! Class to handle arc entity
 /*!
 *  Class to handle arc entity
 *  @author Rallaz
@@ -317,7 +310,6 @@ public:
     int isccw;                  /*!< is counter clockwise arc?, only used in hatch, code 73 */
 };
 
-//! Class to handle ellipse entity
 /*!
 *  Class to handle ellipse and elliptic arc entity
 *  Note: start/end parameter are in radians for ellipse entity but
@@ -351,7 +343,6 @@ public:
     int isccw;           /*!< is counter clockwise arc?, only used in hatch, code 73 */
 };
 
-//! Class to handle trace entity
 /*!
 *  Class to handle trace entity
 *  @author Rallaz
@@ -376,7 +367,6 @@ public:
     DRW_Coord forthPoint;        /*!< forth point, code 13, 23 & 33 */
 };
 
-//! Class to handle solid entity
 /*!
 *  Class to handle solid entity
 *  @author Rallaz
@@ -412,7 +402,6 @@ public:
 
 };
 
-//! Class to handle 3dface entity
 /*!
 *  Class to handle 3dface entity
 *  @author Rallaz
@@ -458,7 +447,6 @@ public:
 
 };
 
-//! Class to handle block entries
 /*!
 *  Class to handle block entries
 *  @author Rallaz
@@ -488,7 +476,6 @@ private:
 };
 
 
-//! Class to handle insert entries
 /*!
 *  Class to handle insert entries
 *  @author Rallaz
@@ -529,7 +516,6 @@ public: //only for read dwg
     dwgHandle seqendH; //RLZ: on implement attrib remove this handle from obj list (see pline/vertex code)
 };
 
-//! Class to handle lwpolyline entity
 /*!
 *  Class to handle lwpolyline entity
 *  @author Rallaz
@@ -588,7 +574,6 @@ public:
 	std::vector<std::shared_ptr<DRW_Vertex2D>> vertlist;  /*!< vertex list */
 };
 
-//! Class to handle insert entries
 /*!
 *  Class to handle insert entries
 *  @author Rallaz
@@ -644,7 +629,6 @@ public:
     dwgHandle styleH;          /*!< handle for text style */
 };
 
-//! Class to handle insert entries
 /*!
 *  Class to handle insert entries
 *  @author Rallaz
@@ -685,7 +669,6 @@ private:
     bool hasXAxisVec; /* renamed by djm for better description */
 };
 
-//! Class to handle vertex
 /*!
 *  Class to handle vertex  for polyline entity
 *  @author Rallaz
@@ -729,7 +712,6 @@ public:
     int identifier;           /*!< vertex identifier, code 91, default 0 */
 };
 
-//! Class to handle polyline entity
 /*!
 *  Class to handle polyline entity
 *  @author Rallaz
@@ -782,7 +764,6 @@ private:
 };
 
 
-//! Class to handle spline entity
 /*!
 *  Class to handle spline entity
 *  @author Rallaz
@@ -834,7 +815,6 @@ private:
 	std::shared_ptr<DRW_Coord> fitpoint;       /*!< current fit point to add data */
 };
 
-//! Class to handle hatch loop
 /*!
 *  Class to handle hatch loop
 *  @author Rallaz
@@ -858,7 +838,6 @@ public:
 	std::vector<std::shared_ptr<DRW_Entity>> objlist;      /*!< entities list */
 };
 
-//! Class to handle hatch entity
 /*!
 *  Class to handle hatch entity
 *  @author Rallaz
@@ -956,7 +935,6 @@ private:
     bool ispol;
 };
 
-//! Class to handle image entity
 /*!
 *  Class to handle image entity
 *  @author Rallaz
@@ -991,7 +969,6 @@ public:
 };
 
 
-//! Base class for dimension entity
 /*!
 *  Base class for dimension entity
 *  @author Rallaz
@@ -1117,7 +1094,6 @@ protected:
 };
 
 
-//! Class to handle  aligned dimension entity
 /*!
 *  Class to handle aligned dimension entity
 *  @author Rallaz
@@ -1146,7 +1122,6 @@ protected:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 };
 
-//! Class to handle  linear or rotated dimension entity
 /*!
 *  Class to handle linear or rotated dimension entity
 *  @author Rallaz
@@ -1166,7 +1141,6 @@ public:
     void setOblique(const double d) {setOb52(d);}
 };
 
-//! Class to handle radial dimension entity
 /*!
 *  Class to handle aligned, linear or rotated dimension entity
 *  @author Rallaz
@@ -1192,7 +1166,6 @@ protected:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 };
 
-//! Class to handle radial dimension entity
 /*!
 *  Class to handle aligned, linear or rotated dimension entity
 *  @author Rallaz
@@ -1218,7 +1191,6 @@ protected:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 };
 
-//! Class to handle angular dimension entity
 /*!
 *  Class to handle angular dimension entity
 *  @author Rallaz
@@ -1249,7 +1221,6 @@ protected:
 };
 
 
-//! Class to handle angular 3p dimension entity
 /*!
 *  Class to handle angular 3p dimension entity
 *  @author Rallaz
@@ -1277,7 +1248,6 @@ protected:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 };
 
-//! Class to handle ordinate dimension entity
 /*!
 *  Class to handle ordinate dimension entity
 *  @author Rallaz
@@ -1304,7 +1274,6 @@ protected:
 };
 
 
-//! Class to handle leader entity
 /*!
 *  Class to handle leader entity
 *  @author Rallaz
@@ -1352,7 +1321,6 @@ private:
     dwgHandle AnnotH;
 };
 
-//! Class to handle viewport entity
 /*!
 *  Class to handle viewport entity
 *  @author Rallaz
