@@ -539,19 +539,19 @@ public:
         this->flags = p.flags;
 		this->extPoint = p.extPoint;
         for (unsigned i=0; i<p.vertlist.size(); i++)// RLZ ok or new
-		  this->vertlist.push_back(
-					std::make_shared<DRW_Vertex2D>(*p.vertlist.at(i))
-					);
+          this->vertlist.push_back(
+                                   std::make_shared<DRW_Vertex2D>(*p.vertlist.at(i))
+                                  );
     }
 	// TODO rule of 5
 
     virtual void applyExtrusion();
     void addVertex (DRW_Vertex2D v) {
-		std::shared_ptr<DRW_Vertex2D> vert = std::make_shared<DRW_Vertex2D>(v);
+        std::shared_ptr<DRW_Vertex2D> vert = std::make_shared<DRW_Vertex2D>(v);
         vertlist.push_back(vert);
     }
-	std::shared_ptr<DRW_Vertex2D> addVertex () {
-		std::shared_ptr<DRW_Vertex2D> vert = std::make_shared<DRW_Vertex2D>();
+        std::shared_ptr<DRW_Vertex2D> addVertex () {
+        std::shared_ptr<DRW_Vertex2D> vert = std::make_shared<DRW_Vertex2D>();
         vert->stawidth = 0;
         vert->endwidth = 0;
         vert->bulge = 0;
