@@ -726,9 +726,9 @@ bool dxfRW::writeTrace(DRW_Trace *ent){
     writer->writeDouble(12, ent->thirdPoint.x);
     writer->writeDouble(22, ent->thirdPoint.y);
     writer->writeDouble(32, ent->thirdPoint.z);
-    writer->writeDouble(13, ent->forthPoint.x);
-    writer->writeDouble(23, ent->forthPoint.y);
-    writer->writeDouble(33, ent->forthPoint.z);
+    writer->writeDouble(13, ent->fourthPoint.x);
+    writer->writeDouble(23, ent->fourthPoint.y);
+    writer->writeDouble(33, ent->fourthPoint.z);
     return true;
 }
 
@@ -747,9 +747,9 @@ bool dxfRW::writeSolid(DRW_Solid *ent){
     writer->writeDouble(12, ent->thirdPoint.x);
     writer->writeDouble(22, ent->thirdPoint.y);
     writer->writeDouble(32, ent->thirdPoint.z);
-    writer->writeDouble(13, ent->forthPoint.x);
-    writer->writeDouble(23, ent->forthPoint.y);
-    writer->writeDouble(33, ent->forthPoint.z);
+    writer->writeDouble(13, ent->fourthPoint.x);
+    writer->writeDouble(23, ent->fourthPoint.y);
+    writer->writeDouble(33, ent->fourthPoint.z);
     return true;
 }
 
@@ -768,9 +768,9 @@ bool dxfRW::write3dface(DRW_3Dface *ent){
     writer->writeDouble(12, ent->thirdPoint.x);
     writer->writeDouble(22, ent->thirdPoint.y);
     writer->writeDouble(32, ent->thirdPoint.z);
-    writer->writeDouble(13, ent->forthPoint.x);
-    writer->writeDouble(23, ent->forthPoint.y);
-    writer->writeDouble(33, ent->forthPoint.z);
+    writer->writeDouble(13, ent->fourthPoint.x);
+    writer->writeDouble(23, ent->fourthPoint.y);
+    writer->writeDouble(33, ent->fourthPoint.z);
     writer->writeInt16(70, ent->invisibleflag);
     return true;
 }
