@@ -148,7 +148,7 @@ public:
     std::string colorName;     /*!< color name, code 430 */
 	int transparency = DRW::Opaque;          /*!< transparency, code 440 */
 	int plotStyle = DRW::DefaultPlotStyle;             /*!< hard pointer id to plot style object, code 390 */
-	DRW::ShadowMode shadow = DRW::CastAndReceieveShadows;    /*!< shadow mode, code 284 */
+    DRW::ShadowMode shadow = DRW::CastAndReceiveShadows;    /*!< shadow mode, code 284 */
 	bool haveExtrusion = false;        /*!< set to true if the entity have extrusion*/
 	std::vector<std::shared_ptr<DRW_Variant>> extData; /*!< FIFO list of extended data, codes 1000 to 1071*/
 
@@ -353,7 +353,7 @@ public:
     DRW_Trace() {
         eType = DRW::TRACE;
         thirdPoint.z = 0;
-        forthPoint.z = 0;
+        fourthPoint.z = 0;
     }
 
     virtual void applyExtrusion();
@@ -364,7 +364,7 @@ protected:
 
 public:
     DRW_Coord thirdPoint;        /*!< third point, code 12, 22 & 32 */
-    DRW_Coord forthPoint;        /*!< forth point, code 13, 23 & 33 */
+    DRW_Coord fourthPoint;        /*!< fourth point, code 13, 23 & 33 */
 };
 
 /*!
@@ -412,7 +412,7 @@ public:
     enum InvisibleEdgeFlags {
         NoEdge = 0x00,
         FirstEdge = 0x01,
-        SecodEdge = 0x02,
+        SecondEdge = 0x02,
         ThirdEdge = 0x04,
         FourthEdge = 0x08,
         AllEdges = 0x0F
@@ -432,7 +432,7 @@ public:
     //! third corner in WCS
     const DRW_Coord & thirdCorner() { return thirdPoint; }
     //! fourth corner in WCS
-    const DRW_Coord & fourthCorner() { return forthPoint; }
+    const DRW_Coord & fourthCorner() { return fourthPoint; }
     //! edge visibility flags
     InvisibleEdgeFlags edgeFlags() { return (InvisibleEdgeFlags)invisibleflag; }
 
