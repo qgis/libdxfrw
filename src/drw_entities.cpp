@@ -1904,11 +1904,11 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                     spline->flags |= (isRational << 2); //rational
                     spline->flags |= (buf->getBit() << 1); //periodic
                     spline->nknots = buf->getBitLong();
+                    spline->ncontrol = buf->getBitLong();
                     spline->knotslist.reserve(spline->nknots);
                     for (dint32 j = 0; j < spline->nknots && buf->isGood();++j){
                         spline->knotslist.push_back (buf->getBitDouble());
                     }
-                    spline->ncontrol = buf->getBitLong();
 
                     if ( !buf->isGood() )
                     {
@@ -1929,7 +1929,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                         DRW_DBG("   nfit:");DRW_DBG(spline->nfit);DRW_DBG("\n");
                         spline->fitlist.reserve(spline->nfit);
                         for (dint32 j = 0; j < spline->nfit && buf->isGood();++j){
-							std::shared_ptr<DRW_Coord> crd = std::make_shared<DRW_Coord>(buf->get3BitDouble());
+							std::shared_ptr<DRW_Coord> crd = std::make_shared<DRW_Coord>(buf->get2RawDouble());
 							spline->fitlist.push_back(crd);
                         }
                         spline->tgStart = buf->get2RawDouble();
