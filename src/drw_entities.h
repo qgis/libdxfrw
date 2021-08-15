@@ -324,7 +324,7 @@ public:
         isccw = 1;
     }
 
-    void toPolyline(DRW_Polyline *pol, int parts = 128);
+    void toPolyline(DRW_Polyline *pol, int parts = 128) const;
     virtual void applyExtrusion();
 
 protected:
