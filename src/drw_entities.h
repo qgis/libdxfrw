@@ -1053,7 +1053,7 @@ public:
     DRW_DimAligned(){
         eType = DRW::DIMALIGNED;
     }
-    DRW_DimAligned(const DRW_Dimension& d): DRW_Dimension(d) {
+    explicit DRW_DimAligned(const DRW_Dimension& d): DRW_Dimension(d) {
         eType = DRW::DIMALIGNED;
     }
 
@@ -1080,7 +1080,7 @@ public:
     DRW_DimLinear() {
         eType = DRW::DIMLINEAR;
     }
-    DRW_DimLinear(const DRW_Dimension& d): DRW_DimAligned(d) {
+    explicit DRW_DimLinear(const DRW_Dimension& d): DRW_DimAligned(d) {
         eType = DRW::DIMLINEAR;
     }
 
@@ -1100,7 +1100,7 @@ public:
     DRW_DimRadial() {
         eType = DRW::DIMRADIAL;
     }
-    DRW_DimRadial(const DRW_Dimension& d): DRW_Dimension(d) {
+    explicit DRW_DimRadial(const DRW_Dimension& d): DRW_Dimension(d) {
         eType = DRW::DIMRADIAL;
     }
 
