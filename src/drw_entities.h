@@ -434,7 +434,7 @@ public:
     //! fourth corner in WCS
     const DRW_Coord & fourthCorner() { return fourthPoint; }
     //! edge visibility flags
-    InvisibleEdgeFlags edgeFlags() { return (InvisibleEdgeFlags)invisibleflag; }
+    InvisibleEdgeFlags edgeFlags() { return static_cast<InvisibleEdgeFlags>(invisibleflag); }
 
 protected:
     //! interpret code in dxf reading process or dispatch to inherited class
