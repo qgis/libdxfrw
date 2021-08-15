@@ -99,17 +99,22 @@ class DRW_Entity {
     SETENTFRIENDS
 public:
     //initializes default values
-	DRW_Entity() = default;
-	virtual ~DRW_Entity() = default;
+    DRW_Entity( enum DRW::ETYPE aType = DRW::UNKNOWN, const UTF8STRING &aLayer = "0" )
+    : eType{aType}
+    , layer{aLayer}
+    {}
 
 	//removed copy/move ctors
 	// looks like the potential issue is the "curr" pointer is reset in previous
 	// versions during copy ctor
 
-	void reset() {
-		extData.clear();
-		curr.reset();
-	}
+    virtual ~DRW_Entity() = default;
+
+    void reset()
+    {
+      extData.clear();
+      curr.reset();
+    }
 
     virtual void applyExtrusion() = 0;
 
@@ -184,12 +189,10 @@ private:
 class DRW_Point : public DRW_Entity {
     SETENTFRIENDS
 public:
-    DRW_Point() {
-        eType = DRW::POINT;
-        basePoint.z = extPoint.x = extPoint.y = 0;
-        extPoint.z = 1;
-        thickness = 0;
-    }
+    DRW_Point( enum DRW::ETYPE type = DRW::POINT, double sx = 0., double sy = 0., double sz = 0. )
+    : DRW_Entity{type}
+    , basePoint{sx, sy, sz}
+    {}
 
     virtual void applyExtrusion(){}
 
@@ -200,7 +203,7 @@ protected:
 public:
     DRW_Coord basePoint;      /*!<  base point, code 10, 20 & 30 */
     double thickness{0};         /*!< thickness, code 39 */
-    DRW_Coord extPoint;       /*!<  Dir extrusion normal vector, code 210, 220 & 230 */
+    DRW_Coord extPoint{0., 0., 1.};       /*!<  Dir extrusion normal vector, code 210, 220 & 230 */
     // TNick: we're not handling code 50 - Angle of the X axis for
     // the UCS in effect when the point was drawn
 };
@@ -212,17 +215,16 @@ public:
 class DRW_Line : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Line() {
-        eType = DRW::LINE;
-        secPoint.z = 0;
-    }
+     DRW_Line( enum DRW::ETYPE type = DRW::LINE )
+     : DRW_Point{type}
+     {}
 
 protected:
     void parseCode(int code, dxfReader *reader);
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 
 public:
-    DRW_Coord secPoint;        /*!< second point, code 11, 21 & 31 */
+    DRW_Coord secPoint{0.,0.,0};        /*!< second point, code 11, 21 & 31 */
 };
 
 /*!
@@ -232,9 +234,9 @@ public:
 class DRW_Ray : public DRW_Line {
     SETENTFRIENDS
 public:
-    DRW_Ray() {
-        eType = DRW::RAY;
-    }
+    DRW_Ray( enum DRW::ETYPE type = DRW::RAY )
+    : DRW_Line{type}
+    {}
 protected:
     virtual bool parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs=0);
 };
@@ -245,9 +247,9 @@ protected:
 */
 class DRW_Xline : public DRW_Ray {
 public:
-    DRW_Xline() {
-        eType = DRW::XLINE;
-    }
+    DRW_Xline( enum DRW::ETYPE type = DRW::XLINE )
+    : DRW_Ray{type}
+    {}
 };
 
 /*!
@@ -257,9 +259,9 @@ public:
 class DRW_Circle : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Circle() {
-        eType = DRW::CIRCLE;
-    }
+    DRW_Circle( enum DRW::ETYPE type = DRW::CIRCLE )
+    : DRW_Point{type}
+    {}
 
     virtual void applyExtrusion();
 
@@ -278,9 +280,9 @@ public:
 class DRW_Arc : public DRW_Circle {
     SETENTFRIENDS
 public:
-    DRW_Arc() {
-        eType = DRW::ARC;
-    }
+    DRW_Arc( enum DRW::ETYPE type = DRW::ARC )
+    : DRW_Circle{type}
+    {}
 
     virtual void applyExtrusion();
 
@@ -318,9 +320,9 @@ public:
 class DRW_Ellipse : public DRW_Line {
     SETENTFRIENDS
 public:
-    DRW_Ellipse() {
-        eType = DRW::ELLIPSE;
-    }
+    DRW_Ellipse( enum DRW::ETYPE type = DRW::ELLIPSE )
+    : DRW_Line{type}
+    {}
 
     void toPolyline(DRW_Polyline *pol, int parts = 128) const;
     virtual void applyExtrusion();
@@ -348,11 +350,9 @@ public:
 class DRW_Trace : public DRW_Line {
     SETENTFRIENDS
 public:
-    DRW_Trace() {
-        eType = DRW::TRACE;
-        thirdPoint.z = 0;
-        fourthPoint.z = 0;
-    }
+    DRW_Trace( enum DRW::ETYPE type = DRW::TRACE )
+    : DRW_Line{type}
+    {}
 
     virtual void applyExtrusion();
 
@@ -361,8 +361,8 @@ protected:
     virtual bool parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs=0);
 
 public:
-    DRW_Coord thirdPoint;        /*!< third point, code 12, 22 & 32 */
-    DRW_Coord fourthPoint;        /*!< fourth point, code 13, 23 & 33 */
+    DRW_Coord thirdPoint{0.,0.,0.};        /*!< third point, code 12, 22 & 32 */
+    DRW_Coord fourthPoint{0.,0.,0.};        /*!< fourth point, code 13, 23 & 33 */
 };
 
 /*!
@@ -372,9 +372,9 @@ public:
 class DRW_Solid : public DRW_Trace {
     SETENTFRIENDS
 public:
-    DRW_Solid() {
-        eType = DRW::SOLID;
-    }
+    DRW_Solid( enum DRW::ETYPE type = DRW::SOLID )
+    : DRW_Trace{type}
+    {}
 
 protected:
     //! interpret code in dxf reading process or dispatch to inherited class
@@ -416,9 +416,9 @@ public:
         AllEdges = 0x0F
     };
 
-    DRW_3Dface() {
-        eType = DRW::E3DFACE;
-    }
+    DRW_3Dface( enum DRW::ETYPE type = DRW::E3DFACE )
+    : DRW_Trace{type}
+    {}
 
     virtual void applyExtrusion(){}
 
@@ -451,10 +451,9 @@ public:
 class DRW_Block : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Block() {
-        eType = DRW::BLOCK;
-        layer = "0";
-    }
+    DRW_Block( enum DRW::ETYPE type = DRW::BLOCK )
+    : DRW_Point{type}
+    {}
 
     virtual void applyExtrusion(){}
 
@@ -477,9 +476,9 @@ private:
 class DRW_Insert : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Insert() {
-        eType = DRW::INSERT;
-    }
+    DRW_Insert( enum DRW::ETYPE type = DRW::INSERT )
+    : DRW_Point{type}
+    {}
 
     virtual void applyExtrusion(){DRW_Point::applyExtrusion();}
 
@@ -509,17 +508,18 @@ public: //only for read dwg
 class DRW_LWPolyline : public DRW_Entity {
     SETENTFRIENDS
 public:
-    DRW_LWPolyline() {
-        eType = DRW::LWPOLYLINE;
-    }
+    DRW_LWPolyline( enum DRW::ETYPE type = DRW::LWPOLYLINE )
+    : DRW_Entity{type}
+    {}
     
-    DRW_LWPolyline(const DRW_LWPolyline& p):DRW_Entity(p){
-        this->eType = DRW::LWPOLYLINE;
-        this->elevation = p.elevation;
-        this->thickness = p.thickness;
-        this->width = p.width;
-        this->flags = p.flags;
-		this->extPoint = p.extPoint;
+    DRW_LWPolyline(const DRW_LWPolyline& p)
+      : DRW_Entity{p}
+      , flags{p.flags}
+      , width{p.width}
+      , elevation{p.elevation}
+      , thickness{p.thickness}
+      , extPoint{p.extPoint}
+    {
         for (unsigned i=0; i<p.vertlist.size(); i++)// RLZ ok or new
           this->vertlist.push_back(
                                    std::make_shared<DRW_Vertex2D>(*p.vertlist.at(i))
@@ -581,9 +581,9 @@ public:
             HFit           /*!< fit into point = 5 (if VAlign==0) */
         };
 
-    DRW_Text() {
-        eType = DRW::TEXT;
-    }
+    DRW_Text( enum DRW::ETYPE type = DRW::TEXT )
+    : DRW_Line{type}
+    {}
 
     virtual void applyExtrusion(){} //RLZ TODO
 
@@ -624,8 +624,9 @@ public:
         BottomRight
     };
 
-    DRW_MText() {
-        eType = DRW::MTEXT;
+    DRW_MText()
+        :DRW_Text{DRW::MTEXT}
+    {
         alignV = static_cast< VAlign >( TopLeft );
         textgen = 1;
     }
@@ -648,16 +649,14 @@ private:
 class DRW_Vertex : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Vertex() {
-        eType = DRW::VERTEX;
-    }
+    DRW_Vertex( enum DRW::ETYPE type = DRW::VERTEX )
+    : DRW_Point{type}
+    {}
+
     DRW_Vertex(double sx, double sy, double sz, double b)
-      : bulge( b )
-    {
-        basePoint.x = sx;
-        basePoint.y =sy;
-        basePoint.z =sz;
-    }
+    : DRW_Point( DRW::VERTEX, sx, sy, sz )
+    , bulge( b )
+    {}
 
 protected:
     void parseCode(int code, dxfReader *reader);
@@ -686,9 +685,10 @@ public:
 class DRW_Polyline : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Polyline() {
-        eType = DRW::POLYLINE;
-    }
+    DRW_Polyline( enum DRW::ETYPE type = DRW::POLYLINE )
+    : DRW_Point{type}
+    {}
+
     void addVertex (DRW_Vertex v) {
         std::shared_ptr<DRW_Vertex> vert = std::make_shared<DRW_Vertex>();
         vert->basePoint.x = v.basePoint.x;
@@ -734,9 +734,10 @@ private:
 class DRW_Spline : public DRW_Entity {
     SETENTFRIENDS
 public:
-    DRW_Spline() {
-        eType = DRW::SPLINE;
-	}
+    DRW_Spline()
+    : DRW_Entity{DRW::SPLINE}
+    {}
+
     virtual void applyExtrusion(){}
 
 protected:
@@ -782,7 +783,7 @@ private:
 class DRW_HatchLoop {
 public:
     explicit DRW_HatchLoop( int t )
-      : type( t )
+      : type{t}
     {
     }
 
@@ -806,10 +807,10 @@ public:
 class DRW_Hatch : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Hatch() {
-        eType = DRW::HATCH;
-        basePoint.x = basePoint.y = basePoint.z = 0.0;
-        clearEntities();
+    DRW_Hatch( enum DRW::ETYPE type = DRW::HATCH )
+    : DRW_Point{type}
+    {
+      clearEntities();
     }
 
     void appendLoop (std::shared_ptr<DRW_HatchLoop> const& v) {
@@ -898,9 +899,9 @@ private:
 class DRW_Image : public DRW_Line {
     SETENTFRIENDS
 public:
-    DRW_Image() {
-        eType = DRW::IMAGE;
-    }
+    DRW_Image( enum DRW::ETYPE type = DRW::IMAGE )
+    : DRW_Line{type}
+    {}
 
 protected:
     void parseCode(int code, dxfReader *reader);
@@ -930,38 +931,38 @@ public:
 class DRW_Dimension : public DRW_Entity {
     SETENTFRIENDS
 public:
-    DRW_Dimension() {
-        eType = DRW::DIMENSION;
-        extPoint.z = 1.0;
-        defPoint.z = 0;
-        textPoint.z = rot = 0;
-        clonePoint.x = clonePoint.y = clonePoint.z = 0;
+
+    DRW_Dimension( enum DRW::ETYPE type = DRW::DIMENSION )
+    : DRW_Entity{type}
+    {
     }
 
-    DRW_Dimension(const DRW_Dimension& d): DRW_Entity(d) {
-        eType = DRW::DIMENSION;
-        type =d.type;
-        name = d.name;
-        defPoint = d.defPoint;
-        textPoint = d.textPoint;
-        text = d.text;
-        style = d.style;
-        align = d.align;
-        linesty = d.linesty;
-        linefactor = d.linefactor;
-        rot = d.rot;
-        extPoint = d.extPoint;
-        clonePoint = d.clonePoint;
-        def1 = d.def1;
-        def2 = d.def2;
-        angle = d.angle;
-        oblique = d.oblique;
-        arcPoint = d.arcPoint;
-        circlePoint = d.circlePoint;
-        length = d.length;
-        //RLZ needed a def value for this: hdir = ???
+    DRW_Dimension( const DRW_Dimension &d )
+      : DRW_Entity( d )
+      , type( d.type )
+      , name( d.name )
+      , defPoint( d.defPoint )
+      , textPoint( d.textPoint )
+      , text( d.text )
+      , style( d.style )
+      , align( d.align )
+      , linesty( d.linesty )
+      , linefactor( d.linefactor )
+      , rot( d.rot )
+      , extPoint( d.extPoint )
+      , hdir( d.hdir ) //RLZ needed a def value for this: hdir = ???
+      , clonePoint( d.clonePoint )
+      , def1( d.def1 )
+      , def2( d.def2 )
+      , angle( d.angle )
+      , oblique( d.oblique )
+      , circlePoint( d.circlePoint )
+      , arcPoint( d.arcPoint )
+      , length( d.length )
+    {
     }
-    virtual ~DRW_Dimension() {}
+
+    virtual ~DRW_Dimension()=default;
 
     virtual void applyExtrusion(){}
 
@@ -1024,7 +1025,7 @@ private:
     int linesty{1};               /*!< Dimension text line spacing style, code 72, default 1 */
     double linefactor{1};         /*!< Dimension text line spacing factor, code 41, default 1? (value range 0.25 to 4.00*/
     double rot{0};                /*!< rotation angle of the dimension text, code 53 */
-    DRW_Coord extPoint;        /*!<  extrusion normal vector, code 210, 220 & 230 */
+    DRW_Coord extPoint{0.,0.,1.};        /*!<  extrusion normal vector, code 210, 220 & 230 */
 
     double hdir{0};               /*!< horizontal direction for the dimension, code 51, default ? */
     DRW_Coord clonePoint;      /*!< Insertion point for clones (Baseline & Continue), code 12, 22 & 32 (OCS) */
@@ -1050,11 +1051,14 @@ protected:
 class DRW_DimAligned : public DRW_Dimension {
     SETENTFRIENDS
 public:
-    DRW_DimAligned(){
-        eType = DRW::DIMALIGNED;
-    }
-    explicit DRW_DimAligned(const DRW_Dimension& d): DRW_Dimension(d) {
-        eType = DRW::DIMALIGNED;
+    DRW_DimAligned()
+    : DRW_Dimension{DRW::DIMALIGNED}
+    {}
+
+    explicit DRW_DimAligned(const DRW_Dimension& d)
+    : DRW_Dimension{d}
+    {
+      eType = DRW::DIMALIGNED;
     }
 
     DRW_Coord getClonepoint() const {return getPt2();}      /*!< Insertion for clones (Baseline & Continue), 12, 22 & 32 */
@@ -1077,10 +1081,13 @@ protected:
 */
 class DRW_DimLinear : public DRW_DimAligned {
 public:
-    DRW_DimLinear() {
-        eType = DRW::DIMLINEAR;
-    }
-    explicit DRW_DimLinear(const DRW_Dimension& d): DRW_DimAligned(d) {
+    DRW_DimLinear()
+    : DRW_DimAligned{DRW::DIMLINEAR}
+    {}
+
+    explicit DRW_DimLinear(const DRW_Dimension& d)
+    : DRW_DimAligned{d}
+    {
         eType = DRW::DIMLINEAR;
     }
 
@@ -1097,10 +1104,14 @@ public:
 class DRW_DimRadial : public DRW_Dimension {
     SETENTFRIENDS
 public:
-    DRW_DimRadial() {
-        eType = DRW::DIMRADIAL;
-    }
-    explicit DRW_DimRadial(const DRW_Dimension& d): DRW_Dimension(d) {
+
+    DRW_DimRadial()
+    : DRW_Dimension{DRW::DIMRADIAL}
+    {}
+
+    explicit DRW_DimRadial(const DRW_Dimension& d)
+    : DRW_Dimension{d}
+    {
         eType = DRW::DIMRADIAL;
     }
 
@@ -1122,10 +1133,14 @@ protected:
 class DRW_DimDiametric : public DRW_Dimension {
     SETENTFRIENDS
 public:
-    DRW_DimDiametric() {
-        eType = DRW::DIMDIAMETRIC;
-    }
-    DRW_DimDiametric(const DRW_Dimension& d): DRW_Dimension(d) {
+
+    DRW_DimDiametric()
+    : DRW_Dimension{DRW::DIMDIAMETRIC}
+    {}
+
+    explicit DRW_DimDiametric(const DRW_Dimension& d)
+    : DRW_Dimension{d}
+    {
         eType = DRW::DIMDIAMETRIC;
     }
 
@@ -1147,10 +1162,13 @@ protected:
 class DRW_DimAngular : public DRW_Dimension {
     SETENTFRIENDS
 public:
-    DRW_DimAngular() {
-        eType = DRW::DIMANGULAR;
-    }
-    DRW_DimAngular(const DRW_Dimension& d): DRW_Dimension(d) {
+    DRW_DimAngular()
+    : DRW_Dimension{DRW::DIMANGULAR}
+    {}
+
+    explicit DRW_DimAngular(const DRW_Dimension& d)
+    : DRW_Dimension{d}
+    {
         eType = DRW::DIMANGULAR;
     }
 
@@ -1177,10 +1195,13 @@ protected:
 class DRW_DimAngular3p : public DRW_Dimension {
     SETENTFRIENDS
 public:
-    DRW_DimAngular3p() {
-        eType = DRW::DIMANGULAR3P;
-    }
-    DRW_DimAngular3p(const DRW_Dimension& d): DRW_Dimension(d) {
+    DRW_DimAngular3p()
+    : DRW_Dimension{DRW::DIMANGULAR3P}
+    {}
+
+    explicit DRW_DimAngular3p(const DRW_Dimension& d)
+    : DRW_Dimension{d}
+    {
         eType = DRW::DIMANGULAR3P;
     }
 
@@ -1204,10 +1225,13 @@ protected:
 class DRW_DimOrdinate : public DRW_Dimension {
     SETENTFRIENDS
 public:
-    DRW_DimOrdinate() {
-        eType = DRW::DIMORDINATE;
-    }
-    DRW_DimOrdinate(const DRW_Dimension& d): DRW_Dimension(d) {
+    DRW_DimOrdinate()
+    : DRW_Dimension{DRW::DIMORDINATE}
+    {}
+
+    explicit DRW_DimOrdinate(const DRW_Dimension& d)
+    : DRW_Dimension{d}
+    {
         eType = DRW::DIMORDINATE;
     }
 
@@ -1230,11 +1254,9 @@ protected:
 class DRW_Leader : public DRW_Entity {
     SETENTFRIENDS
 public:
-    DRW_Leader() {
-        eType = DRW::LEADER;
-        extrusionPoint.x = extrusionPoint.y = 0.0;
-        extrusionPoint.z = 1.0;
-	}
+    DRW_Leader( enum DRW::ETYPE type = DRW::LEADER )
+    : DRW_Entity{type}
+    {}
 
     virtual void applyExtrusion(){}
 
@@ -1254,7 +1276,7 @@ public:
     int vertnum{0};               /*!< Number of vertices, code 76 */
     int coloruse{0};              /*!< Color to use if leader's DIMCLRD = BYBLOCK, code 77 */
     duint32 annotHandle{0};       /*!< Hard reference to associated annotation, code 340 */
-    DRW_Coord extrusionPoint;  /*!< Normal vector, code 210, 220 & 230 */
+    DRW_Coord extrusionPoint{0.,0.,1.};  /*!< Normal vector, code 210, 220 & 230 */
     DRW_Coord horizdir;        /*!< "Horizontal" direction for leader, code 211, 221 & 231 */
     DRW_Coord offsetblock;     /*!< Offset of last leader vertex from block, code 212, 222 & 232 */
     DRW_Coord offsettext;      /*!< Offset of last leader vertex from annotation, code 213, 223 & 233 */
@@ -1274,9 +1296,10 @@ private:
 class DRW_Viewport : public DRW_Point {
     SETENTFRIENDS
 public:
-    DRW_Viewport() {
-        eType = DRW::VIEWPORT;
-    }
+
+    DRW_Viewport( enum DRW::ETYPE type = DRW::VIEWPORT )
+    : DRW_Point{type}
+    {}
 
     virtual void applyExtrusion(){}
 
