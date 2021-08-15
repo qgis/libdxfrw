@@ -817,7 +817,7 @@ void DRW_Trace::applyExtrusion(){
         extrudePoint(extPoint, &basePoint);
         extrudePoint(extPoint, &secPoint);
         extrudePoint(extPoint, &thirdPoint);
-        extrudePoint(extPoint, &forthPoint);
+        extrudePoint(extPoint, &fourthPoint);
     }
 }
 
@@ -833,13 +833,13 @@ void DRW_Trace::parseCode(int code, dxfReader *reader){
         thirdPoint.z = reader->getDouble();
         break;
     case 13:
-        forthPoint.x = reader->getDouble();
+        fourthPoint.x = reader->getDouble();
         break;
     case 23:
-        forthPoint.y = reader->getDouble();
+        fourthPoint.y = reader->getDouble();
         break;
     case 33:
-        forthPoint.z = reader->getDouble();
+        fourthPoint.z = reader->getDouble();
         break;
     default:
         DRW_Line::parseCode(code, reader);
@@ -863,15 +863,15 @@ bool DRW_Trace::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     thirdPoint.x = buf->getRawDouble();
     thirdPoint.y = buf->getRawDouble();
     thirdPoint.z = basePoint.z;
-    forthPoint.x = buf->getRawDouble();
-    forthPoint.y = buf->getRawDouble();
-    forthPoint.z = basePoint.z;
+    fourthPoint.x = buf->getRawDouble();
+    fourthPoint.y = buf->getRawDouble();
+    fourthPoint.z = basePoint.z;
     extPoint = buf->getExtrusion(version>DRW::AC1014, haveExtrusion);
 
     DRW_DBG(" - base "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z);
     DRW_DBG("\n - sec "); DRW_DBGPT(secPoint.x, secPoint.y, secPoint.z);
     DRW_DBG("\n - third "); DRW_DBGPT(thirdPoint.x, thirdPoint.y, thirdPoint.z);
-    DRW_DBG("\n - fourth "); DRW_DBGPT(forthPoint.x, forthPoint.y, forthPoint.z);
+    DRW_DBG("\n - fourth "); DRW_DBGPT(fourthPoint.x, fourthPoint.y, fourthPoint.z);
     DRW_DBG("\n - extrusion: "); DRW_DBGPT(extPoint.x, extPoint.y, extPoint.z);
     DRW_DBG("\n - thickness: "); DRW_DBG(thickness); DRW_DBG("\n");
 
@@ -921,9 +921,9 @@ bool DRW_3Dface::parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs){
         thirdPoint.x = buf->getBitDouble();
         thirdPoint.y = buf->getBitDouble();
         thirdPoint.z = buf->getBitDouble();
-        forthPoint.x = buf->getBitDouble();
-        forthPoint.y = buf->getBitDouble();
-        forthPoint.z = buf->getBitDouble();
+        fourthPoint.x = buf->getBitDouble();
+        fourthPoint.y = buf->getBitDouble();
+        fourthPoint.z = buf->getBitDouble();
         invisibleflag = buf->getBitShort();
     } else { // 2000+
         bool has_no_flag = buf->getBit();
@@ -937,9 +937,9 @@ bool DRW_3Dface::parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs){
         thirdPoint.x = buf->getDefaultDouble(secPoint.x);
         thirdPoint.y = buf->getDefaultDouble(secPoint.y);
         thirdPoint.z = buf->getDefaultDouble(secPoint.z);
-        forthPoint.x = buf->getDefaultDouble(thirdPoint.x);
-        forthPoint.y = buf->getDefaultDouble(thirdPoint.y);
-        forthPoint.z = buf->getDefaultDouble(thirdPoint.z);
+        fourthPoint.x = buf->getDefaultDouble(thirdPoint.x);
+        fourthPoint.y = buf->getDefaultDouble(thirdPoint.y);
+        fourthPoint.z = buf->getDefaultDouble(thirdPoint.z);
         invisibleflag = has_no_flag ? static_cast< int >( NoEdge ) : buf->getBitShort();
     }
     drw_assert(invisibleflag>=NoEdge);
@@ -948,7 +948,7 @@ bool DRW_3Dface::parseDwg(DRW::Version v, dwgBuffer *buf, duint32 bs){
     DRW_DBG(" - base "); DRW_DBGPT(basePoint.x, basePoint.y, basePoint.z); DRW_DBG("\n");
     DRW_DBG(" - sec "); DRW_DBGPT(secPoint.x, secPoint.y, secPoint.z); DRW_DBG("\n");
     DRW_DBG(" - third "); DRW_DBGPT(thirdPoint.x, thirdPoint.y, thirdPoint.z); DRW_DBG("\n");
-    DRW_DBG(" - fourth "); DRW_DBGPT(forthPoint.x, forthPoint.y, forthPoint.z); DRW_DBG("\n");
+    DRW_DBG(" - fourth "); DRW_DBGPT(fourthPoint.x, fourthPoint.y, fourthPoint.z); DRW_DBG("\n");
     DRW_DBG(" - Invisibility mask: "); DRW_DBG(invisibleflag); DRW_DBG("\n");
 
     /* Common Entity Handle Data */
@@ -2804,7 +2804,7 @@ bool DRW_Leader::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     dint32 nPt = buf->getBitLong();
     DRW_DBG(" Num pts "); DRW_DBG(nPt);
 
-    // add vertexs
+    // add vertices
     for (int i = 0; i< nPt; i++){
 		DRW_Coord vertex = buf->get3BitDouble();
 		vertexlist.push_back(std::make_shared<DRW_Coord>(vertex));
