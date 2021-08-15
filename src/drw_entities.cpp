@@ -777,7 +777,7 @@ bool DRW_Ellipse::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
 }
 
 //parts are the number of vertex to split polyline, default 128
-void DRW_Ellipse::toPolyline(DRW_Polyline *pol, int parts){
+void DRW_Ellipse::toPolyline(DRW_Polyline *pol, int parts) const{
     double radMajor, radMinor, cosRot, sinRot, incAngle, curAngle;
     double cosCurr, sinCurr;
 	radMajor = hypot(secPoint.x, secPoint.y);
