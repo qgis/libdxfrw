@@ -110,6 +110,19 @@ enum class DebugLevel {
 };
 
 /**
+ * Exception raised when memory allocation fails.
+ */
+class MemoryAllocationException {
+public:
+    MemoryAllocationException(std::string what)
+    : mWhat{what}
+    {}
+    std::string message() const throw() {return mWhat;}
+  private:
+    std::string mWhat;
+};
+
+/**
  * Interface for debug printers.
  *
  * The base class is silent and ignores all debugging.

@@ -12,9 +12,20 @@
 
 #include <cstdlib>
 #include "drw_entities.h"
+#include "drw_base.h"
 #include "intern/dxfreader.h"
 #include "intern/dwgbuffer.h"
 #include "intern/drw_dbg.h"
+
+#define RESERVE(vector,size,msg) try { \
+    vector.reserve(size); \
+  } catch(const std::exception &e) { \
+    std::stringstream s; \
+    s << msg << " size=" << size << "; error="; \
+    s << e.what(); \
+    throw DRW::MemoryAllocationException(s.str()); \
+  }
+
 
 //! Calculate arbitrary axis
 /*!
@@ -1168,7 +1179,7 @@ void DRW_LWPolyline::parseCode(int code, dxfReader *reader){
         break;
     case 90:
         vertexnum = reader->getInt32();
-        vertlist.reserve(vertexnum);
+        RESERVE(vertlist,vertexnum,"vertex list")
         break;
     case 210:
         haveExtrusion = true;
@@ -1203,7 +1214,7 @@ bool DRW_LWPolyline::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
     if (flags & 1)
         extPoint = buf->getExtrusion(false, haveExtrusion);
     vertexnum = buf->getBitLong();
-    vertlist.reserve(vertexnum);
+    RESERVE(vertlist,vertexnum,"vertex list")
     unsigned int bulgesnum = 0;
     if (flags & 16)
         bulgesnum = buf->getBitLong();
@@ -1795,7 +1806,7 @@ void DRW_Hatch::parseCode(int code, dxfReader *reader){
         break;
     case 91:
         loopsnum = reader->getInt32();
-        looplist.reserve(loopsnum);
+        RESERVE(looplist,loopsnum,"loop list")
         break;
     case 92:
 	loop = std::make_shared<DRW_HatchLoop>(reader->getInt32());
@@ -1908,7 +1919,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                     spline->flags |= (buf->getBit() << 1); //periodic
                     spline->nknots = buf->getBitLong();
                     spline->ncontrol = buf->getBitLong();
-                    spline->knotslist.reserve(spline->nknots);
+                    RESERVE(spline->knotslist,spline->nknots,"knots list")
                     for (dint32 j = 0; j < spline->nknots && buf->isGood();++j){
                         spline->knotslist.push_back (buf->getBitDouble());
                     }
@@ -1920,7 +1931,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                       DRW_DBG(" ncontrol:");DRW_DBG( spline->ncontrol ); DRW_DBG("\n" );
                     }
 
-                    spline->controllist.reserve(spline->ncontrol);
+                    RESERVE(spline->controllist,spline->ncontrol,"control list")
                     for (dint32 j = 0; j < spline->ncontrol && buf->isGood();++j){
                         std::shared_ptr<DRW_Coord> crd = std::make_shared<DRW_Coord>(buf->get2RawDouble());
                         if(isRational)
@@ -1930,7 +1941,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                     if (version > DRW::AC1021) { //2010+
                         spline->nfit = buf->getBitLong();
                         DRW_DBG("   nfit:");DRW_DBG(spline->nfit);DRW_DBG("\n");
-                        spline->fitlist.reserve(spline->nfit);
+                        RESERVE(spline->fitlist,spline->nfit,"fit list")
                         for (dint32 j = 0; j < spline->nfit && buf->isGood();++j){
                             std::shared_ptr<DRW_Coord> crd = std::make_shared<DRW_Coord>(buf->get2RawDouble());
                             spline->fitlist.push_back(crd);
@@ -2155,18 +2166,18 @@ bool DRW_Spline::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
         return false; //RLZ: from doc only 1 or 2 are ok ?
     }
 
-    knotslist.reserve(nknots);
+    RESERVE(knotslist,nknots,"knots list")
     for (dint32 i= 0; i<nknots; ++i){
         knotslist.push_back (buf->getBitDouble());
     }
-    controllist.reserve(ncontrol);
+    RESERVE(controllist,ncontrol,"control list")
 	for (dint32 i= 0; i<ncontrol; ++i){
 		controllist.push_back(std::make_shared<DRW_Coord>(buf->get3BitDouble()));
         if (weight) {
             DRW_DBG("\n w: "); DRW_DBG(buf->getBitDouble()); //RLZ Warning: D (BD or RD)
         }
     }
-    fitlist.reserve(nfit);
+    RESERVE(fitlist,nfit,"fit list")
     for (dint32 i= 0; i<nfit; ++i)
         fitlist.push_back(std::make_shared<DRW_Coord>(buf->get3BitDouble()));
 
