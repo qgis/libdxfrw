@@ -1798,12 +1798,12 @@ void DRW_Hatch::parseCode(int code, dxfReader *reader){
         looplist.reserve(loopsnum);
         break;
     case 92:
-		loop = std::make_shared<DRW_HatchLoop>(reader->getInt32());
+	loop = std::make_shared<DRW_HatchLoop>(reader->getInt32());
         looplist.push_back(loop);
         if (reader->getInt32() & 2) {
             ispol = true;
             clearEntities();
-			pline = std::make_shared<DRW_LWPolyline>();
+            pline = std::make_shared<DRW_LWPolyline>();
             loop->objlist.push_back(pline);
         } else ispol = false;
         break;
@@ -1875,7 +1875,7 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
 
     //read loops
     for (dint32 i = 0 ; i < loopsnum; ++i){
-		loop = std::make_shared<DRW_HatchLoop>(buf->getBitLong());
+        loop = std::make_shared<DRW_HatchLoop>(buf->getBitLong());
         hasPixelSize |= loop->type & 4;
         if (!(loop->type & 2)){ //Not polyline
             dint32 numPathSeg = buf->getBitLong();
@@ -1932,8 +1932,8 @@ bool DRW_Hatch::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
                         DRW_DBG("   nfit:");DRW_DBG(spline->nfit);DRW_DBG("\n");
                         spline->fitlist.reserve(spline->nfit);
                         for (dint32 j = 0; j < spline->nfit && buf->isGood();++j){
-							std::shared_ptr<DRW_Coord> crd = std::make_shared<DRW_Coord>(buf->get2RawDouble());
-							spline->fitlist.push_back(crd);
+                            std::shared_ptr<DRW_Coord> crd = std::make_shared<DRW_Coord>(buf->get2RawDouble());
+                            spline->fitlist.push_back(crd);
                         }
                         spline->tgStart = buf->get2RawDouble();
                         spline->tgEnd = buf->get2RawDouble();
@@ -2069,29 +2069,29 @@ void DRW_Spline::parseCode(int code, dxfReader *reader){
         tolfit = reader->getDouble();
         break;
     case 10: {
-		controlpoint = std::make_shared<DRW_Coord>();
+        controlpoint = std::make_shared<DRW_Coord>();
         controllist.push_back(controlpoint);
         controlpoint->x = reader->getDouble();
         break; }
     case 20:
-		if(controlpoint)
+        if(controlpoint)
             controlpoint->y = reader->getDouble();
         break;
     case 30:
-		if(controlpoint)
+        if(controlpoint)
             controlpoint->z = reader->getDouble();
         break;
     case 11: {
-		fitpoint = std::make_shared<DRW_Coord>();
+        fitpoint = std::make_shared<DRW_Coord>();
         fitlist.push_back(fitpoint);
         fitpoint->x = reader->getDouble();
         break; }
     case 21:
-		if(fitpoint)
+        if(fitpoint)
             fitpoint->y = reader->getDouble();
         break;
     case 31:
-		if(fitpoint)
+        if(fitpoint)
             fitpoint->z = reader->getDouble();
         break;
     case 40:
@@ -2167,23 +2167,22 @@ bool DRW_Spline::parseDwg(DRW::Version version, dwgBuffer *buf, duint32 bs){
         }
     }
     fitlist.reserve(nfit);
-	for (dint32 i= 0; i<nfit; ++i)
-		fitlist.push_back(std::make_shared<DRW_Coord>(buf->get3BitDouble()));
+    for (dint32 i= 0; i<nfit; ++i)
+        fitlist.push_back(std::make_shared<DRW_Coord>(buf->get3BitDouble()));
 
     if (DRW_DBGGL == DRW_dbg::Level::Debug){
-		DRW_DBG("\nknots list: ");
-		for (auto const& v: knotslist) {
-			DRW_DBG("\n"); DRW_DBG(v);
-		}
-        DRW_DBG("\ncontrol point list: ");
-		for (auto const& v: controllist) {
-			DRW_DBG("\n"); DRW_DBGPT(v->x, v->y, v->z);
-		}
-        DRW_DBG("\nfit point list: ");
-		for (auto const& v: fitlist) {
-			DRW_DBG("\n"); DRW_DBGPT(v->x, v->y, v->z);
-		}
-
+          DRW_DBG("\nknots list: ");
+          for (auto const& v: knotslist) {
+              DRW_DBG("\n"); DRW_DBG(v);
+          }
+          DRW_DBG("\ncontrol point list: ");
+          for (auto const& v: controllist) {
+              DRW_DBG("\n"); DRW_DBGPT(v->x, v->y, v->z);
+          }
+          DRW_DBG("\nfit point list: ");
+          for (auto const& v: fitlist) {
+              DRW_DBG("\n"); DRW_DBGPT(v->x, v->y, v->z);
+          }
     }
 
     /* Common Entity Handle Data */
@@ -2733,17 +2732,17 @@ void DRW_Leader::parseCode(int code, dxfReader *reader){
     case 41:
         textwidth = reader->getDouble();
         break;
-	case 10:
-		vertexpoint= std::make_shared<DRW_Coord>();
+    case 10:
+        vertexpoint= std::make_shared<DRW_Coord>();
         vertexlist.push_back(vertexpoint);
         vertexpoint->x = reader->getDouble();
-		break;
+        break;
     case 20:
-		if(vertexpoint)
+        if(vertexpoint)
             vertexpoint->y = reader->getDouble();
         break;
     case 30:
-		if(vertexpoint)
+        if(vertexpoint)
             vertexpoint->z = reader->getDouble();
         break;
     case 340:
